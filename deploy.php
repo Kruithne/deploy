@@ -21,7 +21,7 @@
 	function debug($msg)
 	{
 		if (isDebugging())
-			output($msg);
+			output('[DEBUG]: ' . $msg);
 	}
 
 	/**
@@ -91,7 +91,7 @@
 
 	/* FILE PROCESSING */
 
-	output('Checking files for upload...');
+	output(PHP_EOL . 'Checking files for upload...');
 
 	$directory = getOption('upload_dir');
 
@@ -153,6 +153,54 @@
 	}
 
 	explore($directory); // Start the exploration.
+	debug('File exploring complete');
+
+	output('Connecting to remote host...');
+
+	$connection = ssh2_connect(getOption('host'), getOption('port'));
+	if (!$connection)
+		output('ERROR: Unable to connect to host, check config file!', true);
+
+	debug('Sorting files for upload...');
+	$upload_files = Array();
+	$file_checks = Array();
+	$new_file_checks = Array();
+
+	$check_file = file_get_contents('file_data');
+	if ($check_file != NULL)
+	{
+		foreach (explode(chr(30), $check_file) as $check_file_line)
+		{
+			$split = explode(chr(31), $check_file_line);
+			$file_checks[$split[0]] = $split[1];
+		}
+	}
+	else
+	{
+		debug('No checksum file exists, a new one will be created!');
+	}
+
+	foreach ($files as $file)
+	{
+		$hash = md5_file($file);
+		if (array_key_exists($file, $file_checks) && $file_checks[$file] == $hash)
+		{
+			debug('Hash match, skipping ' . $file);
+			$new_file_checks[] = $file . chr(31) . $hash; // Store the hash.
+		}
+		else
+		{
+			debug('Hash mis-match, uploading file ' . $file);
+			$upload_files[] = $file;
+		}
+	}
+
+	debug('Storing latest file checksum data.');
+	file_put_contents('file_data', implode(chr(30), $new_file_checks)); // Store new hashes.
+	unset($new_file_checks);
+	unset($file_checks);
+
+
 
 	/* END FILE PROCESSING */
 

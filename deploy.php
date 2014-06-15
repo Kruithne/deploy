@@ -266,13 +266,13 @@
 		if (array_key_exists($file, $file_checks) && $file_checks[$file] == $hash)
 		{
 			debug('Hash match, skipping ' . $file);
-			$new_file_checks[] = $file . chr(31) . $hash; // Store the hash.
 		}
 		else
 		{
 			debug('Hash mis-match, uploading file ' . $file);
 			$upload_files[] = $file;
 		}
+		$new_file_checks[] = $file . chr(31) . $hash; // Store the hash.
 	}
 
 	debug('Storing latest file checksum data.');

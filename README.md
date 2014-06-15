@@ -10,7 +10,7 @@ Features
 * Automatic upload of files to a supplied remote host via SFTP.
 * Caches file checksums and only uploads changed files to save time and bandwidth.
 * Supports both plaintext and key-pair authentication through SSH.
-* [Optional] Compiles *.scss files with Sass during upload. (Coming soon)
+* [Optional] Compiles *.scss/*.sass files with Sass during upload. (Coming soon)
 * [Optional] Minifies *.js files with UglifyJS during upload. (Coming Soon)
 
 
@@ -35,5 +35,5 @@ Below you can find a list of flags and what they do.
 
 * **--debug**: Enables debugging output, can be quite spammy!
 * **--fingerprint**: Automatically grab the remote hosts fingerprint and store it in configuration during key-pair authentication.
-* **--sass**: Compile any *.scss files using Sass during upload. (Requires Sass installed)
+* **--sass**: Compile any *.scss/*.sass files using Sass during upload. (Requires Sass installed)
 * **--minify**: Minify any *.js files using  UglifyJS during upload.

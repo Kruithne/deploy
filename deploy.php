@@ -175,10 +175,12 @@
 
 	output('Connecting to remote host...');
 
+	// Connect to remote host.
 	$connection = ssh2_connect(getOption('host'), getOption('port'));
 	if (!$connection)
 		output('ERROR: Unable to connect to host, check config file!', true);
 
+	// Fingerprint checking.
 	$server_fingerprint = ssh2_fingerprint($connection, SSH2_FINGERPRINT_MD5 | SSH2_FINGERPRINT_HEX);
 	if (hasArgument('fingerprint'))
 	{
@@ -194,6 +196,8 @@
 			debug('Cached fingerprint matches remote host fingerprint.');
 	}
 	unset($server_fingerprint);
+
+	// Authentication
 
 	debug('Sorting files for upload...');
 	$upload_files = Array();

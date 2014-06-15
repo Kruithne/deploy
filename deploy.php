@@ -212,7 +212,9 @@
 	if ($password !== NULL)
 	{
 		// We have a password, authenticate with that.
-		if (!ssh2_auth_password($connection, $username, $password))
+		if (ssh2_auth_password($connection, $username, $password))
+			debug('Successfully logged in using plaintext authentication.');
+		else
 			output('ERROR: Unable to authenticate using username/password. Check config!', true);
 	}
 	else

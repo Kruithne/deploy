@@ -90,7 +90,11 @@
 	function getOption($key)
 	{
 		global $options;
-		return array_key_exists($key, $options) ? $options[$key][1] : NULL;
+		if (!array_key_exists($key, $options))
+			return NULL;
+
+		$value = $options[$key];
+		return strlen($value) > 0 ? $value : NULL;
 	}
 
 	/**

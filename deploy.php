@@ -202,7 +202,7 @@
 	unset($server_fingerprint);
 
 	// Authentication
-	$username = getOption('username');
+	$username = getOption('user');
 	if ($username === NULL)
 		output('ERROR: No login username specified in options file.', true);
 

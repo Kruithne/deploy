@@ -109,7 +109,7 @@
 
 	/* FILE PROCESSING */
 
-	output(PHP_EOL . 'Checking files for upload...');
+	output('Checking files for upload...');
 
 	$directory = getOption('upload_dir');
 

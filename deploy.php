@@ -6,6 +6,18 @@
 
 	/* GENERAL SETTINGS */
 	$options_filename = 'options.ini';
+	$run_options = getopt("", Array("debug", "fingerprint"));
+
+	/**
+	 * Check if we have an argument passed to the script.
+	 * @param string $arg Argument to check for.
+	 * @return bool True if we have the argument.
+	 */
+	function hasArgument($arg)
+	{
+		global $run_options;
+		return array_key_exists($arg, $run_options);
+	}
 
 	/**
 	 * Check if the script is running in debug mode.
@@ -13,7 +25,7 @@
 	 */
 	function isDebugging()
 	{
-		return getopt('debug');
+		return hasArgument('debug');
 	}
 
 	/**
@@ -51,7 +63,7 @@
 	// No options file exists, create a new one and cancel the script.
 	if ($options_file === FALSE)
 	{
-		file_put_contents($options_filename, "# Server host\r\nhost=myhost.example.net\r\n\r\n# Server port\r\nport=22\r\n\r\n# Host fingerprint. Run with -fingerprint arg to grab fingerprint automatically.\r\nfingerprint=\r\n\r\n# SSH username\r\nuser=myusername\r\n\r\n# SSH public key file\r\npublic_key=/home/username/.ssh/id_rsa.pub\r\n\r\n# SSH private key file\r\npriv_key=/home/username/.ssh/id_rsa\r\n\r\n# Password for private key file, leave blank if none.\r\npriv_key_pass=\r\n\r\n# Upload directory; All sub-files and directories will be uploaded to the host.\r\nupload_dir=/home/username/myproject/\r\n\r\n# Remote directory; All files/directories will be uploaded to here.\r\nremote_dir=/home/remote_username/stuff/myproject/\r\n\r\n# Files/directories to ignore within the upload_dir, seperated by comma.\r\nignore=random/Something.txt");
+		file_put_contents($options_filename, "# Server host\r\nhost=myhost.example.net\r\n\r\n# Server port\r\nport=22\r\n\r\n# Host fingerprint. Run with --fingerprint arg to grab fingerprint automatically.\r\nfingerprint=\r\n\r\n# SSH username\r\nuser=myusername\r\n\r\n# SSH public key file\r\npublic_key=/home/username/.ssh/id_rsa.pub\r\n\r\n# SSH private key file\r\npriv_key=/home/username/.ssh/id_rsa\r\n\r\n# Password for private key file, leave blank if none.\r\npriv_key_pass=\r\n\r\n# Upload directory; All sub-files and directories will be uploaded to the host.\r\nupload_dir=/home/username/myproject/\r\n\r\n# Remote directory; All files/directories will be uploaded to here.\r\nremote_dir=/home/remote_username/stuff/myproject/\r\n\r\n# Files/directories to ignore within the upload_dir, seperated by comma.\r\nignore=random/Something.txt");
 		output('ERROR: No options.ini found, creating a template one, go edit it now!', true);
 	}
 
@@ -167,10 +179,18 @@
 	if (!$connection)
 		output('ERROR: Unable to connect to host, check config file!', true);
 
-	$fingerprint = getOption('fingerprint');
 	$server_fingerprint = ssh2_fingerprint($connection, SSH2_FINGERPRINT_MD5 | SSH2_FINGERPRINT_HEX);
-	if (strcmp($fingerprint, $server_fingerprint) !== 0)
-		output('ERROR: Unable to verify server fingerprint. Run with -fingerprint flag once to skip the check and cache the remote hosts fingerprint.', true);
+	if (getopt('fingerprint'))
+	{
+		setOption('fingerprint', $server_fingerprint);
+		output('Caching server fingerprint in options file. Remove --fingerprint flag for future executions.');
+	}
+	else
+	{
+		$fingerprint = getOption('fingerprint');
+		if (strcmp($fingerprint, $server_fingerprint) !== 0)
+			output('ERROR: Unable to verify server fingerprint. Run with --fingerprint flag once to skip the check and cache the remote hosts fingerprint.', true);
+	}
 
 	debug('Sorting files for upload...');
 	$upload_files = Array();

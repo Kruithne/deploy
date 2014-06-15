@@ -208,6 +208,19 @@
 
 	output('Logging in as ' . $username . '...');
 
+	$password = getOption('password');
+	if ($password !== NULL)
+	{
+		// We have a password, authenticate with that.
+		if (!ssh2_auth_password($connection, $username, $password))
+			output('ERROR: Unable to authenticate using username/password. Check config!', true);
+	}
+	else
+	{
+		// No password, check for SSH keys for authentication.
+		// ToDo: SSH key authentication.
+	}
+
 	debug('Sorting files for upload...');
 	$upload_files = Array();
 	$file_checks = Array();

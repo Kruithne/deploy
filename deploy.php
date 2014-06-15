@@ -202,6 +202,11 @@
 	unset($server_fingerprint);
 
 	// Authentication
+	$username = getOption('username');
+	if ($username === NULL)
+		output('ERROR: No login username specified in options file.', true);
+
+	output('Logging in as ' . $username . '...');
 
 	debug('Sorting files for upload...');
 	$upload_files = Array();

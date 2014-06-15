@@ -257,7 +257,6 @@
 	$sftp = ssh2_sftp($connection);
 
 	debug('Sorting files for upload...');
-	//$upload_files = Array();
 	$file_checks = Array();
 	$new_file_checks = Array();
 

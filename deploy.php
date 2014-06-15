@@ -6,7 +6,7 @@
 
 	/* GENERAL SETTINGS */
 	$options_filename = 'options.ini';
-	$run_options = getopt("", Array("debug", "fingerprint"));
+	$run_options = getopt("", Array("debug", "fingerprint", "sass", "minify"));
 
 	/**
 	 * Check if we have an argument passed to the script.
@@ -66,6 +66,16 @@
 	// Check we have SSH2 installed and set-up
 	if (!function_exists('ssh2_connect'))
 		output('ERROR: php_ssh2 not found, please install it!', true);
+
+	// If we're to use Sass, check it's installed.
+	if (hasArgument('sass'))
+	{
+		$sass_version = exec('sass -v');
+		if (substr($sass_version, 0, 4) == 'Sass')
+			output('Detected Sass version: ' . $sass_version);
+		else
+			output('ERROR: Sass parameter was included but no install of Sass was found.', true);
+	}
 
 	/* OPTIONS PROCESSING */
 	$options_file = file_get_contents($options_filename);

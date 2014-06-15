@@ -193,6 +193,7 @@
 		else
 			debug('Cached fingerprint matches remote host fingerprint.');
 	}
+	unset($server_fingerprint);
 
 	debug('Sorting files for upload...');
 	$upload_files = Array();
@@ -233,8 +234,6 @@
 	file_put_contents('file_data', implode(chr(30), $new_file_checks)); // Store new hashes.
 	unset($new_file_checks);
 	unset($file_checks);
-
-
 
 	/* END FILE PROCESSING */
 

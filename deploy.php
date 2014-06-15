@@ -220,7 +220,24 @@
 	else
 	{
 		// No password, check for SSH keys for authentication.
-		// ToDo: SSH key authentication.
+		debug('No password in config, using SSH key authentication...');
+
+		$public_key = getOption('public_key');
+		if ($public_key === NULL)
+			output('ERROR: No public key specified in config file.', true);
+
+		$private_key = getOption('priv_key');
+		if ($private_key === NULL)
+			output('ERROR: No private key specified in config file.', true);
+
+		$private_key_pass = getOption('priv_key_pass');
+		if ($private_key_pass === NULL)
+			output('ERROR: No private key passphrase specified in config file.', true);
+
+		if (ssh2_auth_pubkey_file($connection, $username, $public_key, $private_key, $private_key_pass))
+			debug('Key-pair authentication successful!');
+		else
+			output('ERROR: Unable to authenticate with remote host using key-pair');
 	}
 
 	debug('Sorting files for upload...');

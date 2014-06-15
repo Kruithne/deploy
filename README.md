@@ -36,4 +36,4 @@ Below you can find a list of flags and what they do.
 * **--debug**: Enables debugging output, can be quite spammy!
 * **--fingerprint**: Automatically grab the remote hosts fingerprint and store it in configuration during key-pair authentication.
 * **--sass**: Compile any *.scss/*.sass files using Sass during upload. (Requires Sass installed)
-* **--minify**: Minify any *.js files using UglifyJS during upload.
+* **--minify**: Minify any *.js files using UglifyJS during upload. (Requires UglifyJS installed)

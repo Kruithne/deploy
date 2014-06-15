@@ -326,4 +326,6 @@
 	file_put_contents($options_filename, implode("\r\n", $options_raw)); // Store the new options in the file.
 
 	/* END POST_RUN OPTION PROCESSING */
+
+	output('COMPLETE!');
 ?>

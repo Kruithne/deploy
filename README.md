@@ -1,4 +1,39 @@
-PHP Deployment Script
-=====================
+deploy - PHP deployment script
+==============================
 
-This script has been created for personal use by myself so it is not being developed with being user-friendly or feature-rich in mind!
+deploy is a simple PHP script designed to make syncing your project to a remote host from a development or staging server
+much simpler.
+
+Features
+--------
+
+* Automatic upload of files to a supplied remote host via SFTP.
+* Caches file checksums and only uploads changed files to save time and bandwidth.
+* Supports both plaintext and key-pair authentication through SSH.
+* [Optional] Compiles *.scss files with Sass during upload. (Coming soon)
+* [Optional] Minifies *.js files with UglifyJS during upload. (Coming Soon)
+
+
+Getting Started
+---------------
+
+Simply grab the *deploy.php* file and run it once using the following command.
+```
+php deploy.php
+```
+deploy will show an error and create   a template options file which is self explanatory, go through and edit the configuration as needed and then run the script again using the same command above!
+
+
+Enabling Features
+----------------
+
+Extra features can be enabled by passing long-option arguments to the script, below is a simple example of passing one of these flags to the script!
+```
+php deploy.php --debug
+```
+Below you can find a list of flags and what they do.
+
+* --debug: Enables debugging output, can be quite spammy!
+* --fingerprint: Automatically grab the remote hosts fingerprint and store it in configuration during key-pair authentication.
+* --sass: Compile any *.scss files using Sass during upload. (Requires Sass installed)
+* --minify: Minify any *.js files using  UglifyJS during upload.

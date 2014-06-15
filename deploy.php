@@ -77,6 +77,16 @@
 			output('ERROR: Sass parameter was included but no install of Sass was found.', true);
 	}
 
+	// If we're to minify code, check we have UglifyJS installed.
+	if (hasArgument('minify'))
+	{
+		$uglify_version = exec('uglifyjs -V');
+		if (substr($uglify_version, 0, 9) == 'uglify-js')
+			output('Detected UglifyJS version: ' . $uglify_version);
+		else
+			output('ERROR: Minify parameter was included but no install of UglifyJS was found.', true);
+	}
+
 	/* OPTIONS PROCESSING */
 	$options_file = file_get_contents($options_filename);
 

@@ -293,11 +293,11 @@
 			if (ssh2_scp_send($connection, $file, $remote_file))
 			{
 				$new_file_checks[] = $file . chr(31) . $hash; // Store the hash.
-				output('Successfully uploaded file ' . $file);
+				output('Successfully uploaded file ' . $remote_file);
 			}
 			else
 			{
-				output('Failed to upload file ' . $file);
+				output('Failed to upload file ' . $remote_file);
 			}
 		}
 	}

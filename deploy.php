@@ -167,6 +167,11 @@
 	if (!$connection)
 		output('ERROR: Unable to connect to host, check config file!', true);
 
+	$fingerprint = getOption('fingerprint');
+	$server_fingerprint = ssh2_fingerprint($connection, SSH2_FINGERPRINT_MD5 | SSH2_FINGERPRINT_HEX);
+	if (strcmp($fingerprint, $server_fingerprint) !== 0)
+		output('ERROR: Unable to verify server fingerprint. Run with -fingerprint flag once to skip the check and cache the remote hosts fingerprint.', true);
+
 	debug('Sorting files for upload...');
 	$upload_files = Array();
 	$file_checks = Array();

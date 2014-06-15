@@ -180,7 +180,7 @@
 		output('ERROR: Unable to connect to host, check config file!', true);
 
 	$server_fingerprint = ssh2_fingerprint($connection, SSH2_FINGERPRINT_MD5 | SSH2_FINGERPRINT_HEX);
-	if (getopt('fingerprint'))
+	if (hasArgument('fingerprint'))
 	{
 		setOption('fingerprint', $server_fingerprint);
 		output('Caching server fingerprint in options file. Remove --fingerprint flag for future executions.');

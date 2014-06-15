@@ -2,6 +2,8 @@
 	// deploy.php by Kruithne (https://github.com/Kruithne/)
 	// See LICENSE or README for information and stuff!
 
+	error_reporting(E_ERROR | E_PARSE);
+
 	/* GENERAL SETTINGS */
 	$options_filename = 'options.ini';
 

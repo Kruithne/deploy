@@ -200,7 +200,7 @@
 	$new_file_checks = Array();
 
 	$check_file = file_get_contents('file_data');
-	if ($check_file != NULL)
+	if ($check_file !== NULL)
 	{
 		foreach (explode(chr(30), $check_file) as $check_file_line)
 		{

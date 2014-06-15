@@ -131,6 +131,9 @@
 	if ($directory == NULL || !file_exists($directory))
 		output('ERROR: Invalid upload_dir in configuration file.', true);
 
+	// Trim off any trailing directory separators.
+	$directory = rtrim($directory, DIRECTORY_SEPARATOR);
+
 	$ignored = Array();
 	$ignore_string = getOption('ignore');
 

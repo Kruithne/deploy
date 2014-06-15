@@ -51,6 +51,16 @@
 			die();
 	}
 
+	/**
+	 * Make sure there are no double directory separators in a string.
+	 * @param string $input Input string to clean.
+	 * @return string Cleaned string.
+	 */
+	function smoothSeparators($input)
+	{
+		return str_replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $input);
+	}
+
 	debug('DEBUG ENABLED');
 
 	// Check we have SSH2 installed and set-up
@@ -241,7 +251,7 @@
 	}
 
 	debug('Sorting files for upload...');
-	$upload_files = Array();
+	//$upload_files = Array();
 	$file_checks = Array();
 	$new_file_checks = Array();
 
@@ -260,19 +270,33 @@
 		debug('No checksum file exists, a new one will be created!');
 	}
 
+	$remote_location = getOption('remote_dir');
+	if ($remote_location === NULL)
+		output('ERROR: No remote directory specified.', true);
+
 	foreach ($files as $file)
 	{
 		$hash = md5_file($file);
 		if (array_key_exists($file, $file_checks) && $file_checks[$file] == $hash)
 		{
 			debug('Hash match, skipping ' . $file);
+			$new_file_checks[] = $file . chr(31) . $hash; // Store the hash.
 		}
 		else
 		{
 			debug('Hash mis-match, uploading file ' . $file);
-			$upload_files[] = $file;
+
+			$remote_file = smoothSeparators($remote_location . substr($file, strlen($directory)));
+			if (ssh2_scp_send($connection, $file, $remote_file))
+			{
+				$new_file_checks[] = $file . chr(31) . $hash; // Store the hash.
+				output('Successfully uploaded file ' . $file);
+			}
+			else
+			{
+				output('Failed to upload file ' . $file);
+			}
 		}
-		$new_file_checks[] = $file . chr(31) . $hash; // Store the hash.
 	}
 
 	debug('Storing latest file checksum data.');

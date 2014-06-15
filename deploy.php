@@ -202,6 +202,7 @@
 	$check_file = file_get_contents('file_data');
 	if ($check_file !== NULL)
 	{
+		debug('Checksum file exists, loading from file now...');
 		foreach (explode(chr(30), $check_file) as $check_file_line)
 		{
 			$split = explode(chr(31), $check_file_line);

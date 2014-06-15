@@ -93,7 +93,7 @@
 		if (!array_key_exists($key, $options))
 			return NULL;
 
-		$value = $options[$key];
+		$value = $options[$key][1];
 		return strlen($value) > 0 ? $value : NULL;
 	}
 

@@ -39,6 +39,10 @@
 
 	debug('DEBUG ENABLED');
 
+	// Check we have SSH2 installed and set-up
+	if (!function_exists('ssh2_connect'))
+		output('ERROR: php_ssh2 not found, please install it!', true);
+
 	/* OPTIONS PROCESSING */
 	$options_file = file_get_contents($options_filename);
 

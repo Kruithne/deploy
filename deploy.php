@@ -253,6 +253,9 @@
 			output('ERROR: Unable to authenticate with remote host using key-pair');
 	}
 
+	debug('Requesting SFTP subsystem from remote host...');
+	$sftp = ssh2_sftp($connection);
+
 	debug('Sorting files for upload...');
 	//$upload_files = Array();
 	$file_checks = Array();
@@ -290,6 +293,11 @@
 			debug('Hash mis-match, uploading file ' . $file);
 
 			$remote_file = smoothSeparators($remote_location . substr($file, strlen($directory)));
+
+			// Make any required directories to upload the file.
+			debug('Making directories for ' . $remote_file);
+			ssh2_sftp_mkdir($sftp, dirname($remote_file), 0777, true);
+
 			if (ssh2_scp_send($connection, $file, $remote_file))
 			{
 				$new_file_checks[] = $file . chr(31) . $hash; // Store the hash.

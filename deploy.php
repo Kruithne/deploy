@@ -190,6 +190,8 @@
 		$fingerprint = getOption('fingerprint');
 		if (strcmp($fingerprint, $server_fingerprint) !== 0)
 			output('ERROR: Unable to verify server fingerprint. Run with --fingerprint flag once to skip the check and cache the remote hosts fingerprint.', true);
+		else
+			debug('Cached fingerprint matches remote host fingerprint.');
 	}
 
 	debug('Sorting files for upload...');

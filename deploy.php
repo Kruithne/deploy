@@ -256,7 +256,7 @@
 	debug('Requesting SFTP subsystem from remote host...');
 	$sftp = ssh2_sftp($connection);
 
-	debug('Sorting files for upload...');
+	output('Uploading changed files...');
 	$file_checks = Array();
 	$new_file_checks = Array();
 

@@ -324,8 +324,6 @@
 			output('ERROR: No private key specified in config file.', true);
 
 		$private_key_pass = getOption('priv_key_pass');
-		if ($private_key_pass === NULL)
-			output('ERROR: No private key passphrase specified in config file.', true);
 
 		if (ssh2_auth_pubkey_file($connection, $username, $public_key, $private_key, $private_key_pass))
 			debug('Key-pair authentication successful!');

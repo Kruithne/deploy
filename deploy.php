@@ -353,12 +353,16 @@
 	}
 
 	// Remove temporary directory
+	debug('Deleting temporary directory...');
 	foreach (scandir($temp_dir) as $temp_file)
 	{
 		if ($temp_file == '.' || $temp_file == '..')
 			continue;
 
-		unlink($temp_dir . DIRECTORY_SEPARATOR . $temp_file);
+		$temp_file_path = $temp_dir . DIRECTORY_SEPARATOR . $temp_file;
+
+		debug('Deleting temp file: ' . $temp_file_path);
+		unlink($temp_file_path);
 	}
 
 	rmdir($temp_dir);

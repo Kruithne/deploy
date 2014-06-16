@@ -8,6 +8,29 @@
 	$options_filename = 'options.ini';
 	$run_options = getopt("", Array("debug", "fingerprint", "sass", "uglify"));
 
+	// Spawn temporary directory.
+	$temp_dir = 'deploy_tmp';
+	if (!mkdir($temp_dir))
+		output('ERROR: Unable to create temp directory at execution location.', true);
+
+	function cleanup()
+	{
+		global $temp_dir;
+		// Remove temporary directory
+		debug('Deleting temporary directory...');
+		foreach (scandir($temp_dir) as $temp_file)
+		{
+			if ($temp_file == '.' || $temp_file == '..')
+				continue;
+
+			$temp_file_path = $temp_dir . DIRECTORY_SEPARATOR . $temp_file;
+
+			debug('Deleting temp file: ' . $temp_file_path);
+			unlink($temp_file_path);
+		}
+		rmdir($temp_dir);
+	}
+
 	/**
 	 * Check if we have an argument passed to the script.
 	 * @param string $arg Argument to check for.
@@ -51,7 +74,10 @@
 		echo $msg . PHP_EOL;
 
 		if ($die)
+		{
+			cleanup();
 			die();
+		}
 	}
 
 	/**
@@ -302,11 +328,6 @@
 	if ($remote_location === NULL)
 		output('ERROR: No remote directory specified.', true);
 
-	// Spawn temporary directory.
-	$temp_dir = 'deploy_tmp';
-	if (!mkdir($temp_dir))
-		output('ERROR: Unable to create temp directory at execution location.', true);
-
 	foreach ($files as $file)
 	{
 		$hash = md5_file($file);
@@ -352,20 +373,7 @@
 		}
 	}
 
-	// Remove temporary directory
-	debug('Deleting temporary directory...');
-	foreach (scandir($temp_dir) as $temp_file)
-	{
-		if ($temp_file == '.' || $temp_file == '..')
-			continue;
-
-		$temp_file_path = $temp_dir . DIRECTORY_SEPARATOR . $temp_file;
-
-		debug('Deleting temp file: ' . $temp_file_path);
-		unlink($temp_file_path);
-	}
-
-	rmdir($temp_dir);
+	cleanup();
 
 	debug('Storing latest file checksum data.');
 	file_put_contents('file_data', implode(chr(30), $new_file_checks)); // Store new hashes.

@@ -302,6 +302,7 @@
 	if ($remote_location === NULL)
 		output('ERROR: No remote directory specified.', true);
 
+	// Spawn temporary directory.
 	$temp_dir = 'deploy_tmp';
 	if (!mkdir($temp_dir))
 		output('ERROR: Unable to create temp directory at execution location.', true);
@@ -335,6 +336,9 @@
 			}
 		}
 	}
+
+	// Remove temporary directory
+	rmdir($temp_dir);
 
 	debug('Storing latest file checksum data.');
 	file_put_contents('file_data', implode(chr(30), $new_file_checks)); // Store new hashes.

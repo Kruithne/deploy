@@ -186,7 +186,7 @@
 		debug('Exploring directory ' . $dir);
 		foreach (scandir($dir) as $file)
 		{
-			if ($file == '.' || $file == '..')
+			if ($file == '.' || $file == '..' || $file == '.sass-cache')
 				continue;
 
 			$path = $dir . DIRECTORY_SEPARATOR . $file;

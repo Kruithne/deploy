@@ -354,6 +354,14 @@
 	}
 
 	// Remove temporary directory
+	foreach (scandir($temp_dir) as $temp_file)
+	{
+		if ($temp_file == '.' || $temp_file == '..')
+			continue;
+
+		unlink($temp_dir . DIRECTORY_SEPARATOR . $temp_file);
+	}
+
 	rmdir($temp_dir);
 
 	debug('Storing latest file checksum data.');

@@ -6,7 +6,7 @@
 
 	/* GENERAL SETTINGS */
 	$options_filename = 'options.ini';
-	$run_options = getopt("", Array("debug", "fingerprint", "sass", "minify"));
+	$run_options = getopt("", Array("debug", "fingerprint", "sass", "uglify"));
 
 	/**
 	 * Check if we have an argument passed to the script.
@@ -20,7 +20,7 @@
 	}
 
 	$using_sass = hasArgument('sass');
-	$using_uglify = hasArgument('minify');
+	$using_uglify = hasArgument('uglify');
 
 	/**
 	 * Check if the script is running in debug mode.

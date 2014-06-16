@@ -19,6 +19,9 @@
 		return array_key_exists($arg, $run_options);
 	}
 
+	$using_sass = hasArgument('sass');
+	$using_uglify = hasArgument('minify');
+
 	/**
 	 * Check if the script is running in debug mode.
 	 * @return bool True if we're in debug mode.
@@ -68,7 +71,7 @@
 		output('ERROR: php_ssh2 not found, please install it!', true);
 
 	// If we're to use Sass, check it's installed.
-	if (hasArgument('sass'))
+	if ($using_sass)
 	{
 		$sass_version = exec('sass -v');
 		if (substr($sass_version, 0, 4) == 'Sass')
@@ -78,7 +81,7 @@
 	}
 
 	// If we're to minify code, check we have UglifyJS installed.
-	if (hasArgument('minify'))
+	if ($using_uglify)
 	{
 		$uglify_version = exec('uglifyjs -V');
 		if (substr($uglify_version, 0, 9) == 'uglify-js')

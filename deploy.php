@@ -6,7 +6,7 @@
 
 	/* GENERAL SETTINGS */
 	$options_filename = 'options.ini';
-	$run_options = getopt("", Array("debug", "fingerprint", "sass", "uglify"));
+	$run_options = getopt("", Array("debug", "fingerprint", "sass", "uglify", "force"));
 
 	// Spawn temporary directory.
 	$temp_dir = 'deploy_tmp';

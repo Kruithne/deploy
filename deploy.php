@@ -341,6 +341,7 @@
 			debug('Hash mis-match, uploading file ' . $file);
 			$upload_file = $file;
 			$file_name = substr($file, strlen($directory));
+			$upload_file_name = $file_name;
 
 			if ($using_sass || $using_uglify)
 			{
@@ -350,12 +351,13 @@
 				// If we're using Sass, check extensions and compile.
 				if ($using_sass && ($ext == 'scss' || $ext == 'sass'))
 				{
-					$upload_file = $temp_dir . implode('.', $file_name_parts) . '.css';
+					$upload_file_name = implode('.', $file_name_parts) . '.css';
+					$upload_file = $temp_dir . $upload_file_name;
 					exec('sass ' . $file . ' ' . $upload_file);
 				}
 			}
 
-			$remote_file = smoothSeparators($remote_location . $file_name);
+			$remote_file = smoothSeparators($remote_location . $upload_file_name);
 
 			// Make any required directories to upload the file.
 			debug('Making directories for ' . $remote_file);

@@ -355,6 +355,13 @@
 					$upload_file = $temp_dir . $upload_file_name;
 					exec('sass ' . $file . ' ' . $upload_file);
 				}
+
+				// If we're using UglifyJS, check extensions and minify!
+				if ($using_uglify && $ext == 'js')
+				{
+					$upload_file = $temp_dir . $file_name;
+					exec('uglifyjs --output ' . $upload_file . ' ' . $file);
+				}
 			}
 
 			$remote_file = smoothSeparators($remote_location . $upload_file_name);

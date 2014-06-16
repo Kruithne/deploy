@@ -283,7 +283,7 @@
 	$file_checks = Array();
 	$new_file_checks = Array();
 
-	$check_file = file_get_contents('file_data');
+	$check_file = hasArgument('force') ? NULL : file_get_contents('file_data');
 	if ($check_file !== NULL)
 	{
 		debug('Checksum file exists, loading from file now...');

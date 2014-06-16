@@ -37,3 +37,4 @@ Below you can find a list of flags and what they do.
 * **--fingerprint**: Automatically grab the remote hosts fingerprint and store it in configuration during key-pair authentication.
 * **--sass**: Compile any *.scss/*.sass files using Sass during upload. (Requires Sass installed)
 * **--uglify**: Minify any *.js files using UglifyJS during upload. (Requires UglifyJS installed)
+* **--force**: Invalidate the file cache and upload every file regardless. Equivalent to deleting *file_data*.

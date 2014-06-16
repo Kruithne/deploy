@@ -120,6 +120,43 @@
 		return $directory . DIRECTORY_SEPARATOR . $ele;
 	}
 
+	/**
+	 * Explore a directory, placing all files into the $files array and
+	 * initiating itself on any directories found. Anything found in the
+	 * $ignored array will be skipped over.
+	 * @param string $dir Directory to explore.
+	 */
+	function explore($dir)
+	{
+		global $files, $ignored;
+
+		debug('Exploring directory ' . $dir);
+		foreach (scandir($dir) as $file)
+		{
+			if ($file == '.' || $file == '..' || $file == '.sass-cache')
+				continue;
+
+			$path = $dir . DIRECTORY_SEPARATOR . $file;
+
+			if (in_array($path, $ignored))
+			{
+				debug('Skipping ignored file ' . $path);
+			}
+			else
+			{
+				if (is_dir($path))
+				{
+					explore($path);
+				}
+				else
+				{
+					debug('Found file ' . $path);
+					$files[] = $path;
+				}
+			}
+		}
+	}
+
 	error_reporting(E_ERROR | E_PARSE);
 
 	/* GENERAL SETTINGS */
@@ -229,43 +266,6 @@
 	unset($ignore_string);
 
 	$files = Array();
-
-	/**
-	 * Explore a directory, placing all files into the $files array and
-	 * initiating itself on any directories found. Anything found in the
-	 * $ignored array will be skipped over.
-	 * @param string $dir Directory to explore.
-	 */
-	function explore($dir)
-	{
-		global $files, $ignored;
-
-		debug('Exploring directory ' . $dir);
-		foreach (scandir($dir) as $file)
-		{
-			if ($file == '.' || $file == '..' || $file == '.sass-cache')
-				continue;
-
-			$path = $dir . DIRECTORY_SEPARATOR . $file;
-
-			if (in_array($path, $ignored))
-			{
-				debug('Skipping ignored file ' . $path);
-			}
-			else
-			{
-				if (is_dir($path))
-				{
-					explore($path);
-				}
-				else
-				{
-					debug('Found file ' . $path);
-					$files[] = $path;
-				}
-			}
-		}
-	}
 
 	explore($directory); // Start the exploration.
 	debug('File exploring complete');

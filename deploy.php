@@ -338,8 +338,7 @@
 
 			// Make any required directories to upload the file.
 			debug('Making directories for ' . $remote_file);
-			if (!ssh2_sftp_mkdir($sftp, dirname($remote_file), 0777, true))
-				output('ERROR: Unable to create directories for file on remote host: ' . $remote_file, true);
+			ssh2_sftp_mkdir($sftp, dirname($remote_file), 0777, true);
 
 			if (ssh2_scp_send($connection, $upload_file, $remote_file))
 			{

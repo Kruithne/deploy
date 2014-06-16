@@ -318,15 +318,30 @@
 		else
 		{
 			debug('Hash mis-match, uploading file ' . $file);
+			$upload_file = $file;
+			$file_name = substr($file, strlen($directory));
 
-			$remote_file = smoothSeparators($remote_location . substr($file, strlen($directory)));
+			if ($using_sass || $using_uglify)
+			{
+				$file_name_parts = explode('.', $file_name);
+				$ext = array_pop($file_name_parts);
+
+				// If we're using Sass, check extensions and compile.
+				if ($using_sass && ($ext == 'scss' || $ext == 'sass'))
+				{
+					$upload_file = $temp_dir . DIRECTORY_SEPARATOR . implode('.', $file_name_parts) . '.css';
+					exec('sass ' . $file . ' ' . $upload_file);
+				}
+			}
+
+			$remote_file = smoothSeparators($remote_location . $file_name);
 
 			// Make any required directories to upload the file.
 			debug('Making directories for ' . $remote_file);
 			if (!ssh2_sftp_mkdir($sftp, dirname($remote_file), 0777, true))
 				output('ERROR: Unable to create directories for file on remote host: ' . $remote_file, true);
 
-			if (ssh2_scp_send($connection, $file, $remote_file))
+			if (ssh2_scp_send($connection, $upload_file, $remote_file))
 			{
 				$new_file_checks[] = $file . chr(31) . $hash; // Store the hash.
 				output('Successfully uploaded file ' . $remote_file);

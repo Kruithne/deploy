@@ -350,7 +350,7 @@
 				// If we're using Sass, check extensions and compile.
 				if ($using_sass && ($ext == 'scss' || $ext == 'sass'))
 				{
-					$upload_file = $temp_dir . DIRECTORY_SEPARATOR . implode('.', $file_name_parts) . '.css';
+					$upload_file = $temp_dir . implode('.', $file_name_parts) . '.css';
 					exec('sass ' . $file . ' ' . $upload_file);
 				}
 			}

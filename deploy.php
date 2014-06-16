@@ -2,17 +2,6 @@
 	// deploy.php by Kruithne (https://github.com/Kruithne/)
 	// See LICENSE or README for information and stuff!
 
-	error_reporting(E_ERROR | E_PARSE);
-
-	/* GENERAL SETTINGS */
-	$run_options = getopt("", Array("debug", "fingerprint", "sass", "uglify", "force", "less", "config:"));
-	$options_filename = hasArgument('config') ? $run_options['config'] : 'options.ini';
-
-	// Spawn temporary directory.
-	$temp_dir = 'deploy_tmp';
-	if (!mkdir($temp_dir))
-		output('ERROR: Unable to create temp directory at execution location.', true);
-
 	function cleanup()
 	{
 		global $temp_dir;
@@ -87,6 +76,61 @@
 		return str_replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $input);
 	}
 
+	/**
+	 * Check if a module is active for this runtime.
+	 * @param string $module Name of the module to check for.
+	 * @return bool True if the module exists and is active.
+	 */
+	function moduleIsActive($module)
+	{
+		global $modules;
+		return array_key_exists($module, $modules) && $modules[$module]['active'];
+	}
+
+	/**
+	 * Retrieve an option parsed from the config file.
+	 * @param string $key Key to retrieve.
+	 * @return string|null Value or NULL if it doesn't exist.
+	 */
+	function getOption($key)
+	{
+		global $options;
+		if (!array_key_exists($key, $options))
+			return NULL;
+
+		$value = $options[$key][1];
+		return strlen($value) > 0 ? $value : NULL;
+	}
+
+	/**
+	 * Set an option to be saved in the config file after the script runs.
+	 * @param string $key Key to store the option by.
+	 * @param string $value Value of the option.
+	 */
+	function setOption($key, $value)
+	{
+		global $options;
+		if (array_key_exists($key, $options))
+			$options[$key][1] = $value;
+	}
+
+	function ignoreMap($ele)
+	{
+		global $directory;
+		return $directory . DIRECTORY_SEPARATOR . $ele;
+	}
+
+	error_reporting(E_ERROR | E_PARSE);
+
+	/* GENERAL SETTINGS */
+	$run_options = getopt("", Array("debug", "fingerprint", "sass", "uglify", "force", "less", "config:"));
+	$options_filename = hasArgument('config') ? $run_options['config'] : 'options.ini';
+
+	// Spawn temporary directory.
+	$temp_dir = 'deploy_tmp';
+	if (!mkdir($temp_dir))
+		output('ERROR: Unable to create temp directory at execution location.', true);
+
 	debug('DEBUG ENABLED');
 
 	$modules = Array(
@@ -136,17 +180,6 @@
 			output('ERROR: ' . $module_name . ' parameter was included but no install of ' . $module_name . ' was found!', true);
 	}
 
-	/**
-	 * Check if a module is active for this runtime.
-	 * @param string $module Name of the module to check for.
-	 * @return bool True if the module exists and is active.
-	 */
-	function moduleIsActive($module)
-	{
-		global $modules;
-		return array_key_exists($module, $modules) && $modules[$module]['active'];
-	}
-
 	/* OPTIONS PROCESSING */
 	$options_file = file_get_contents($options_filename);
 
@@ -172,33 +205,6 @@
 	}
 	unset($line_index);
 
-	/**
-	 * Retrieve an option parsed from the config file.
-	 * @param string $key Key to retrieve.
-	 * @return string|null Value or NULL if it doesn't exist.
-	 */
-	function getOption($key)
-	{
-		global $options;
-		if (!array_key_exists($key, $options))
-			return NULL;
-
-		$value = $options[$key][1];
-		return strlen($value) > 0 ? $value : NULL;
-	}
-
-	/**
-	 * Set an option to be saved in the config file after the script runs.
-	 * @param string $key Key to store the option by.
-	 * @param string $value Value of the option.
-	 */
-	function setOption($key, $value)
-	{
-		global $options;
-		if (array_key_exists($key, $options))
-			$options[$key][1] = $value;
-	}
-
 	/* END OPTIONS PROCESSING */
 
 	/* FILE PROCESSING */
@@ -216,12 +222,6 @@
 
 	$ignored = Array();
 	$ignore_string = getOption('ignore');
-
-	function ignoreMap($ele)
-	{
-		global $directory;
-		return $directory . DIRECTORY_SEPARATOR . $ele;
-	}
 
 	if ($ignore_string != null)
 		$ignored = array_map("ignoreMap", explode(',', $ignore_string));

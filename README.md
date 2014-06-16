@@ -11,6 +11,7 @@ Features
 * Caches file checksums and only uploads changed files to save time and bandwidth.
 * Supports both plaintext and key-pair authentication through SSH.
 * [Optional] Compiles *.scss/*.sass files with Sass during upload.
+* [Optional] Compiles *.less files with less during upload.
 * [Optional] Minifies *.js files with UglifyJS during upload.
 
 
@@ -36,5 +37,6 @@ Below you can find a list of flags and what they do.
 * **--debug**: Enables debugging output, can be quite spammy!
 * **--fingerprint**: Automatically grab the remote hosts fingerprint and store it in configuration during key-pair authentication.
 * **--sass**: Compile any *.scss/*.sass files using Sass during upload. (Requires Sass installed)
+* **--less**: Compi;e any *.less files using Less during upload. (Requires Less installed)
 * **--uglify**: Minify any *.js files using UglifyJS during upload. (Requires UglifyJS installed)
 * **--force**: Invalidate the file cache and upload every file regardless. Equivalent to deleting *file_data*.

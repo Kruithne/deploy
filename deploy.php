@@ -6,7 +6,7 @@
 
 	/* GENERAL SETTINGS */
 	$options_filename = 'options.ini';
-	$run_options = getopt("", Array("debug", "fingerprint", "sass", "uglify", "force"));
+	$run_options = getopt("", Array("debug", "fingerprint", "sass", "uglify", "force", "less"));
 
 	// Spawn temporary directory.
 	$temp_dir = 'deploy_tmp';
@@ -44,6 +44,7 @@
 
 	$using_sass = hasArgument('sass');
 	$using_uglify = hasArgument('uglify');
+	$using_less = hasArgument('less');
 
 	/**
 	 * Check if the script is running in debug mode.
@@ -114,6 +115,16 @@
 			output('Detected UglifyJS version: ' . $uglify_version);
 		else
 			output('ERROR: Minify parameter was included but no install of UglifyJS was found.', true);
+	}
+
+	// If we're to use Less, check it's installed
+	if ($using_less)
+	{
+		$less_version = exec('lessc -v');
+		if (substr($less_version, 0, 5) == 'lessc')
+			output('Detected Less version: ' . $less_version);
+		else
+			output('ERROR: Less parameter was included but no install of Less was found', true);
 	}
 
 	/* OPTIONS PROCESSING */
@@ -343,7 +354,7 @@
 			$file_name = substr($file, strlen($directory));
 			$upload_file_name = $file_name;
 
-			if ($using_sass || $using_uglify)
+			if ($using_sass || $using_uglify || $using_less)
 			{
 				$file_name_parts = explode('.', $file_name);
 				$ext = array_pop($file_name_parts);
@@ -361,6 +372,14 @@
 				{
 					$upload_file = $temp_dir . $file_name;
 					exec('uglifyjs --output ' . $upload_file . ' ' . $file);
+				}
+
+				// If we're uising Less, check extensions and compile.
+				if ($using_less && $ext == 'less')
+				{
+					$upload_file_name = implode('.', $file_name_parts) . '.css';
+					$upload_file = $temp_dir . $upload_file_name;
+					exec('lessc ' . $file . ' > ' . $upload_file);
 				}
 			}
 

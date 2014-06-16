@@ -302,6 +302,10 @@
 	if ($remote_location === NULL)
 		output('ERROR: No remote directory specified.', true);
 
+	$temp_dir = 'deploy_tmp';
+	if (!mkdir($temp_dir))
+		output('ERROR: Unable to create temp directory at execution location.', true);
+
 	foreach ($files as $file)
 	{
 		$hash = md5_file($file);

@@ -11,7 +11,7 @@ Features
 * Caches file checksums and only uploads changed files to save time and bandwidth.
 * Supports both plaintext and key-pair authentication through SSH.
 * [Optional] Compiles *.scss/*.sass files with Sass during upload.
-* [Optional] Minifies *.js files with UglifyJS during upload. (Coming Soon)
+* [Optional] Minifies *.js files with UglifyJS during upload.
 
 
 Getting Started

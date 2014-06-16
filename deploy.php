@@ -42,10 +42,6 @@
 		return array_key_exists($arg, $run_options);
 	}
 
-	$using_sass = hasArgument('sass');
-	$using_uglify = hasArgument('uglify');
-	$using_less = hasArgument('less');
-
 	/**
 	 * Check if the script is running in debug mode.
 	 * @return bool True if we're in debug mode.
@@ -93,38 +89,62 @@
 
 	debug('DEBUG ENABLED');
 
+	$modules = Array(
+		'Sass' => Array(
+			'active' => hasArgument('sass'),
+			'version_check' => 'sass -v',
+			'version_match' => 'Sass',
+			'extensions' => Array('scss', 'sass'),
+			'new_extension' => 'css',
+			'compile' => 'sass %s %s'
+		),
+		'Less' => Array(
+			'active' => hasArgument('less'),
+			'version_check' => 'lessc -v',
+			'version_match' => 'lessc',
+			'extensions' => Array('less'),
+			'compile' => 'less %s > %s'
+		),
+		'UglifyJS' => Array(
+			'active' => hasArgument('uglify'),
+			'version_check' => 'uglifyjs -V',
+			'version_match' => 'uglify-js',
+			'extensions' => Array('js'),
+			'new_extension' => 'js',
+			'compile' => 'uglifyjs --output %2$s %1$s'
+		)
+	);
+
 	// Check we have SSH2 installed and set-up
 	if (!function_exists('ssh2_connect'))
 		output('ERROR: php_ssh2 not found, please install it!', true);
 
-	// If we're to use Sass, check it's installed.
-	if ($using_sass)
+	$has_modules = false;
+
+	// Check all modules needed are installed.
+	foreach ($modules as $module_name => $module)
 	{
-		$sass_version = exec('sass -v');
-		if (substr($sass_version, 0, 4) == 'Sass')
-			output('Detected Sass version: ' . $sass_version);
+		// If the module is not active, skip the version check.
+		if ($module['active'] == false)
+			continue;
+
+		$has_modules = true;
+		$version_check = exec($module['version_check']);
+		if (strpos($version_check, $module['version_match']) === 0)
+			output('Detected ' . $module_name . ' version: ' . $version_check);
 		else
-			output('ERROR: Sass parameter was included but no install of Sass was found.', true);
+			output('ERROR: ' . $module_name . ' parameter was included but no install of ' . $module_name . ' was found!', true);
 	}
 
-	// If we're to minify code, check we have UglifyJS installed.
-	if ($using_uglify)
+	/**
+	 * Check if a module is active for this runtime.
+	 * @param string $module Name of the module to check for.
+	 * @return bool True if the module exists and is active.
+	 */
+	function moduleIsActive($module)
 	{
-		$uglify_version = exec('uglifyjs -V');
-		if (substr($uglify_version, 0, 9) == 'uglify-js')
-			output('Detected UglifyJS version: ' . $uglify_version);
-		else
-			output('ERROR: Minify parameter was included but no install of UglifyJS was found.', true);
-	}
-
-	// If we're to use Less, check it's installed
-	if ($using_less)
-	{
-		$less_version = exec('lessc -v');
-		if (substr($less_version, 0, 5) == 'lessc')
-			output('Detected Less version: ' . $less_version);
-		else
-			output('ERROR: Less parameter was included but no install of Less was found', true);
+		global $modules;
+		return array_key_exists($module, $modules) && $modules[$module]['active'];
 	}
 
 	/* OPTIONS PROCESSING */
@@ -354,32 +374,26 @@
 			$file_name = substr($file, strlen($directory));
 			$upload_file_name = $file_name;
 
-			if ($using_sass || $using_uglify || $using_less)
+			if ($has_modules)
 			{
 				$file_name_parts = explode('.', $file_name);
 				$ext = array_pop($file_name_parts);
 
-				// If we're using Sass, check extensions and compile.
-				if ($using_sass && ($ext == 'scss' || $ext == 'sass'))
+				foreach ($modules as $module_name => $module)
 				{
-					$upload_file_name = implode('.', $file_name_parts) . '.css';
-					$upload_file = $temp_dir . $upload_file_name;
-					exec('sass ' . $file . ' ' . $upload_file);
-				}
+					// Skip module if it's not active.
+					if (!$module['active'])
+						continue;
 
-				// If we're using UglifyJS, check extensions and minify!
-				if ($using_uglify && $ext == 'js')
-				{
-					$upload_file = $temp_dir . $file_name;
-					exec('uglifyjs --output ' . $upload_file . ' ' . $file);
-				}
+					// Check this module wants the file extension.
+					if (in_array($ext, $module['extensions']))
+					{
+						if (array_key_exists('new_extension', $module))
+							$upload_file_name = implode('.', $file_name_parts) . '.' . $module['new_extension'];
 
-				// If we're uising Less, check extensions and compile.
-				if ($using_less && $ext == 'less')
-				{
-					$upload_file_name = implode('.', $file_name_parts) . '.css';
-					$upload_file = $temp_dir . $upload_file_name;
-					exec('lessc ' . $file . ' > ' . $upload_file);
+						$upload_file = $temp_dir . $upload_file_name;
+						exec(sprintf($module['compile'], $file, $upload_file));
+					}
 				}
 			}
 

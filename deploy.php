@@ -5,8 +5,8 @@
 	error_reporting(E_ERROR | E_PARSE);
 
 	/* GENERAL SETTINGS */
-	$options_filename = 'options.ini';
-	$run_options = getopt("", Array("debug", "fingerprint", "sass", "uglify", "force", "less"));
+	$run_options = getopt("", Array("debug", "fingerprint", "sass", "uglify", "force", "less", "config:"));
+	$options_filename = hasArgument('config') ? $run_options['config'] : 'options.ini';
 
 	// Spawn temporary directory.
 	$temp_dir = 'deploy_tmp';

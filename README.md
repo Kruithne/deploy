@@ -40,3 +40,4 @@ Below you can find a list of flags and what they do.
 * **--less**: Compi;e any *.less files using Less during upload. (Requires Less installed)
 * **--uglify**: Minify any *.js files using UglifyJS during upload. (Requires UglifyJS installed)
 * **--force**: Invalidate the file cache and upload every file regardless. Equivalent to deleting *file_data*.
+* **--config <file>**: Path to an alternative config file to use, making switching between set-ups easier.

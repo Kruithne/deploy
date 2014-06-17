@@ -200,23 +200,6 @@
 	if (!function_exists('ssh2_connect'))
 		output('ERROR: php_ssh2 not found, please install it!', true);
 
-	$has_modules = false;
-
-	// Check all modules needed are installed.
-	foreach ($modules as $module_name => $module)
-	{
-		// If the module is not active, skip the version check.
-		if ($module['active'] == false)
-			continue;
-
-		$has_modules = true;
-		$version_check = exec($module['version_check']);
-		if (strpos($version_check, $module['version_match']) === 0)
-			output('Detected ' . $module_name . ' version: ' . $version_check);
-		else
-			output('ERROR: ' . $module_name . ' parameter was included but no install of ' . $module_name . ' was found!', true);
-	}
-
 	/* OPTIONS PROCESSING */
 	$options_file = file_get_contents($options_filename);
 
@@ -248,6 +231,23 @@
 		$option_argument_parts = explode(',', str_replace(Array(' ', '-'), '', $option_arguments));
 		foreach ($option_argument_parts as $part)
 			$run_options[$part] = false;
+	}
+
+	$has_modules = false;
+
+	// Check all modules needed are installed.
+	foreach ($modules as $module_name => $module)
+	{
+		// If the module is not active, skip the version check.
+		if ($module['active'] == false)
+			continue;
+
+		$has_modules = true;
+		$version_check = exec($module['version_check']);
+		if (strpos($version_check, $module['version_match']) === 0)
+			output('Detected ' . $module_name . ' version: ' . $version_check);
+		else
+			output('ERROR: ' . $module_name . ' parameter was included but no install of ' . $module_name . ' was found!', true);
 	}
 
 	/* END OPTIONS PROCESSING */

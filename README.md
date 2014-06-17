@@ -41,3 +41,8 @@ Below you can find a list of flags and what they do.
 * **--uglify**: Minify any *.js files using UglifyJS during upload. (Requires UglifyJS installed)
 * **--force**: Invalidate the file cache and upload every file regardless. Equivalent to deleting *file_data*.
 * **--config <file>**: Path to an alternative config file to use, making switching between set-ups easier.
+
+You can send arguments into the script from the configuration file by adding the value *options* to the configuration file. With the example below added to your configuration file the script will act as if the Sass and UglifyJS arguments had been passed in.
+```
+options=sass,uglify
+```

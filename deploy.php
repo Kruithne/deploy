@@ -250,10 +250,6 @@
 			output('ERROR: ' . $module_name . ' parameter was included but no install of ' . $module_name . ' was found!', true);
 	}
 
-	/* END OPTIONS PROCESSING */
-
-	/* FILE PROCESSING */
-
 	output('Checking files for upload...');
 
 	$directory = getOption('upload_dir');
@@ -428,17 +424,11 @@
 	unset($new_file_checks);
 	unset($file_checks);
 
-	/* END FILE PROCESSING */
-
-	/* POST-RUN OPTION PROCESSING */
-
 	// Update the raw options array with any changes we might have made.
 	foreach ($options as $key => $value)
 		$options_raw[$value[0]] = $key . '=' . $value[1];
 
 	file_put_contents($options_filename, implode("\r\n", $options_raw)); // Store the new options in the file.
-
-	/* END POST_RUN OPTION PROCESSING */
 
 	output('COMPLETE!');
 ?>

@@ -242,6 +242,14 @@
 	}
 	unset($line_index);
 
+	$option_arguments = getOption('options');
+	if ($option_arguments !== NULL)
+	{
+		$option_argument_parts = explode(',', str_replace(Array(' ', '-'), '', $option_arguments));
+		foreach ($option_argument_parts as $part)
+			$run_options[$part] = false;
+	}
+
 	/* END OPTIONS PROCESSING */
 
 	/* FILE PROCESSING */

@@ -170,32 +170,6 @@
 
 	debug('DEBUG ENABLED');
 
-	$modules = Array(
-		'Sass' => Array(
-			'active' => hasArgument('sass'),
-			'version_check' => 'sass -v',
-			'version_match' => 'Sass',
-			'extensions' => Array('scss', 'sass'),
-			'new_extension' => 'css',
-			'compile' => 'sass %s %s'
-		),
-		'Less' => Array(
-			'active' => hasArgument('less'),
-			'version_check' => 'lessc -v',
-			'version_match' => 'lessc',
-			'extensions' => Array('less'),
-			'compile' => 'less %s > %s'
-		),
-		'UglifyJS' => Array(
-			'active' => hasArgument('uglify'),
-			'version_check' => 'uglifyjs -V',
-			'version_match' => 'uglify-js',
-			'extensions' => Array('js'),
-			'new_extension' => 'js',
-			'compile' => 'uglifyjs --output %2$s %1$s'
-		)
-	);
-
 	// Check we have SSH2 installed and set-up
 	if (!function_exists('ssh2_connect'))
 		output('ERROR: php_ssh2 not found, please install it!', true);
@@ -232,6 +206,32 @@
 		foreach ($option_argument_parts as $part)
 			$run_options[$part] = false;
 	}
+
+	$modules = Array(
+		'Sass' => Array(
+			'active' => hasArgument('sass'),
+			'version_check' => 'sass -v',
+			'version_match' => 'Sass',
+			'extensions' => Array('scss', 'sass'),
+			'new_extension' => 'css',
+			'compile' => 'sass %s %s'
+		),
+		'Less' => Array(
+			'active' => hasArgument('less'),
+			'version_check' => 'lessc -v',
+			'version_match' => 'lessc',
+			'extensions' => Array('less'),
+			'compile' => 'less %s > %s'
+		),
+		'UglifyJS' => Array(
+			'active' => hasArgument('uglify'),
+			'version_check' => 'uglifyjs -V',
+			'version_match' => 'uglify-js',
+			'extensions' => Array('js'),
+			'new_extension' => 'js',
+			'compile' => 'uglifyjs --output %2$s %1$s'
+		)
+	);
 
 	$has_modules = false;
 

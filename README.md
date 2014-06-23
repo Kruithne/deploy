@@ -37,7 +37,7 @@ Below you can find a list of flags and what they do.
 * **--debug**: Enables debugging output, can be quite spammy!
 * **--fingerprint**: Automatically grab the remote hosts fingerprint and store it in configuration during key-pair authentication.
 * **--sass**: Compile any *.scss/*.sass files using Sass during upload. (Requires Sass installed)
-* **--less**: Compi;e any *.less files using Less during upload. (Requires Less installed)
+* **--less**: Compile any *.less files using Less during upload. (Requires Less installed)
 * **--uglify**: Minify any *.js files using UglifyJS during upload. (Requires UglifyJS installed)
 * **--force**: Invalidate the file cache and upload every file regardless. Equivalent to deleting *file_data*.
 * **--config <file>**: Path to an alternative config file to use, making switching between set-ups easier.

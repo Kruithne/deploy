@@ -361,6 +361,8 @@
 	if ($remote_location === NULL)
 		output('ERROR: No remote directory specified.', true);
 
+	$file_register = Array();
+
 	foreach ($files as $file)
 	{
 		$hash = md5_file($file);
@@ -405,6 +407,7 @@
 			debug('Making directories for ' . $remote_file);
 			ssh2_sftp_mkdir($sftp, dirname($remote_file), 0777, true);
 
+			$file_register[$file] = $remote_file; // Mark this in the register.
 			if (ssh2_scp_send($connection, $upload_file, $remote_file))
 			{
 				$new_file_checks[] = $file . chr(31) . $hash; // Store the hash.
@@ -414,6 +417,21 @@
 			{
 				output('Failed to upload file ' . $remote_file);
 			}
+		}
+	}
+
+	debug('Deleting missing files...');
+	// Delete missing files from server.
+	foreach ($file_checks as $check => $remote_check)
+	{
+		// Check if the file exists in the register.
+		if (!array_key_exists($check, $file_register))
+		{
+			// File was not found in the register, which means it's missing.
+			// Attempt to unlink the remote version (may fail if different modules are used).
+
+			output('Deleting old file: ' . $remote_check);
+			ssh2_sftp_unlink($connection, $remote_check);
 		}
 	}
 

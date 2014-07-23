@@ -420,7 +420,7 @@
 		}
 	}
 
-	debug('Deleting missing files...');
+	output('Deleting missing files...');
 	// Delete missing files from server.
 	foreach ($file_checks as $check => $remote_check)
 	{

@@ -407,7 +407,7 @@
 			debug('Making directories for ' . $remote_file);
 			ssh2_sftp_mkdir($sftp, dirname($remote_file), 0777, true);
 
-			$file_register[$file] = $remote_file; // Mark this in the register.
+			$file_register[] = $file; // Mark this in the register.
 			if (ssh2_scp_send($connection, $upload_file, $remote_file))
 			{
 				$new_file_checks[] = $file . chr(31) . $hash; // Store the hash.
@@ -422,16 +422,41 @@
 
 	output('Deleting missing files...');
 	// Delete missing files from server.
-	foreach ($file_checks as $check => $remote_check)
+	foreach ($file_checks as $check_hash => $check_file)
 	{
 		// Check if the file exists in the register.
-		if (!array_key_exists($check, $file_register))
+		if (!array_key_exists($check_file, $file_register))
 		{
 			// File was not found in the register, which means it's missing.
 			// Attempt to unlink the remote version (may fail if different modules are used).
 
-			output('Deleting old file: ' . $remote_check);
-			ssh2_sftp_unlink($connection, $remote_check);
+			debug('File not found, creating assumed remote file name for ' . $check_file);
+
+			$file_name = substr($check_file, strlen($directory));
+			$upload_file_name = $file_name;
+
+			if ($has_modules)
+			{
+				$file_name_parts = explode('.', $file_name);
+				$ext = array_pop($file_name_parts);
+
+				foreach ($modules as $module_name => $module)
+				{
+					// Skip module if it's not active.
+					if (!$module['active'])
+						continue;
+
+					// Check this module wants the file extension.
+					if (in_array($ext, $module['extensions']))
+						if (array_key_exists('new_extension', $module))
+							$upload_file_name = implode('.', $file_name_parts) . '.' . $module['new_extension'];
+				}
+			}
+
+			$remote_file = smoothSeparators($remote_location . $upload_file_name);
+
+			output('Deleting old file: ' . $remote_file);
+			ssh2_sftp_unlink($connection, $remote_file);
 		}
 	}
 

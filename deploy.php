@@ -422,7 +422,7 @@
 
 	output('Deleting missing files...');
 	// Delete missing files from server.
-	foreach ($file_checks as $check_hash => $check_file)
+	foreach ($file_checks as $check_file => $check_hash)
 	{
 		// Check if the file exists in the register.
 		if (!array_key_exists($check_file, $file_register))

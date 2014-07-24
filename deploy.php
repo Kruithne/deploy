@@ -400,7 +400,9 @@
 							$upload_file_name = implode('.', $file_name_parts) . '.' . $module['new_extension'];
 
 						$upload_file = $temp_dir . $upload_file_name;
-						exec(sprintf($module['compile'], $file, $upload_file));
+						$cmd = sprintf($module['compile'], $file, $upload_file);
+						debug('Module compile command: ' . $cmd);
+						exec($cmd);
 					}
 				}
 			}

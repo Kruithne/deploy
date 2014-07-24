@@ -403,7 +403,10 @@
 
 						$upload_dir = rtrim(substr($upload_file, 0, strpos($upload_file, $upload_file_name)), '/');
 						if (strlen($upload_dir) > 0)
+						{
+							debug('Creating temp dir: ' . $upload_dir);
 							mkdir($upload_dir, 0777, true);
+						}
 
 						$cmd = sprintf($module['compile'], $file, $upload_file);
 						debug('Module compile command: ' . $cmd);

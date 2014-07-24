@@ -460,7 +460,8 @@
 			$remote_file = smoothSeparators($remote_location . $upload_file_name);
 
 			output('Deleting old file: ' . $remote_file);
-			ssh2_sftp_unlink($connection, $remote_file);
+			if (!ssh2_sftp_unlink($connection, $remote_file))
+				output('UNABLE to delete remote file: ' . $remote_file);
 		}
 	}
 

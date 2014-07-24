@@ -427,6 +427,7 @@
 	// Delete missing files from server.
 	foreach ($file_checks as $check_file => $check_hash)
 	{
+		debug('Checking register for file: ' . $check_file);
 		// Check if the file exists in the register.
 		if (!array_key_exists($check_file, $file_register))
 		{

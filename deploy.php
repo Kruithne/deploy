@@ -31,6 +31,7 @@
 				unlink($temp_file_path);
 			}
 		}
+		rmdir($dir);
 	}
 
 	/**

@@ -396,19 +396,17 @@
 					// Check this module wants the file extension.
 					if (in_array($ext, $module['extensions']))
 					{
-						if (array_key_exists('new_extension', $module))
-							$upload_file_name = implode('.', $file_name_parts) . '.' . $module['new_extension'];
-
-						$upload_file = $temp_dir . $upload_file_name;
-
-						$upload_dir = rtrim(substr($upload_file, 0, strpos($upload_file, $upload_file_name)), '/');
+						$upload_dir = rtrim(substr($file_name, 0, strpos($temp_dir . $upload_file_name, $file_name)), '/');
 						if (strlen($upload_dir) > 0)
 						{
 							debug('Creating temp dir: ' . $upload_dir);
 							mkdir($upload_dir, 0777, true);
 						}
 
-						$cmd = sprintf($module['compile'], $file, $upload_file);
+						if (array_key_exists('new_extension', $module))
+							$upload_file_name = implode('.', $file_name_parts) . '.' . $module['new_extension'];
+
+						$cmd = sprintf($module['compile'], $file, $temp_dir . $upload_file_name);
 						debug('Module compile command: ' . $cmd);
 						exec($cmd);
 					}

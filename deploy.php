@@ -366,7 +366,9 @@
 	foreach ($files as $file)
 	{
 		$hash = md5_file($file);
+
 		$file_register[] = $file; // Mark this in the register.
+		debug('Marking file in register: ' . $file);
 
 		if (array_key_exists($file, $file_checks) && $file_checks[$file] == $hash)
 		{

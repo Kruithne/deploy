@@ -429,7 +429,7 @@
 	{
 		debug('Checking register for file: ' . $check_file);
 		// Check if the file exists in the register.
-		if (!array_key_exists($check_file, $file_register))
+		if (!in_array($check_file, $file_register))
 		{
 			// File was not found in the register, which means it's missing.
 			// Attempt to unlink the remote version (may fail if different modules are used).

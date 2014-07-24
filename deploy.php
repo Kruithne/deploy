@@ -366,6 +366,8 @@
 	foreach ($files as $file)
 	{
 		$hash = md5_file($file);
+		$file_register[] = $file; // Mark this in the register.
+
 		if (array_key_exists($file, $file_checks) && $file_checks[$file] == $hash)
 		{
 			debug('Hash match, skipping ' . $file);
@@ -407,7 +409,6 @@
 			debug('Making directories for ' . $remote_file);
 			ssh2_sftp_mkdir($sftp, dirname($remote_file), 0777, true);
 
-			$file_register[] = $file; // Mark this in the register.
 			if (ssh2_scp_send($connection, $upload_file, $remote_file))
 			{
 				$new_file_checks[] = $file . chr(31) . $hash; // Store the hash.

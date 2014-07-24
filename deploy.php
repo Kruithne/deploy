@@ -7,17 +7,30 @@
 		global $temp_dir;
 		// Remove temporary directory
 		debug('Deleting temporary directory...');
-		foreach (scandir($temp_dir) as $temp_file)
+		cleanup_step($temp_dir);
+	}
+
+	function cleanup_step($dir)
+	{
+		foreach (scandir($dir) as $temp_file)
 		{
 			if ($temp_file == '.' || $temp_file == '..')
 				continue;
 
-			$temp_file_path = $temp_dir . DIRECTORY_SEPARATOR . $temp_file;
+			$temp_file_path = $dir . DIRECTORY_SEPARATOR . $temp_file;
 
-			debug('Deleting temp file: ' . $temp_file_path);
-			unlink($temp_file_path);
+			if (is_dir($temp_file_path))
+			{
+				debug('Deleting temp dir: ' . $temp_file_path);
+				cleanup_step($temp_file_path);
+				rmdir($temp_file_path);
+			}
+			else
+			{
+				debug('Deleting temp file: ' . $temp_file_path);
+				unlink($temp_file_path);
+			}
 		}
-		rmdir($temp_dir);
 	}
 
 	/**

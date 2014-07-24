@@ -396,7 +396,9 @@
 					// Check this module wants the file extension.
 					if (in_array($ext, $module['extensions']))
 					{
-						$upload_dir = rtrim(substr($file_name, 0, strpos($temp_dir . $upload_file_name, $file_name)), '/');
+						$temp_loc = $temp_dir . $upload_file_name;
+						$upload_dir = rtrim(substr($temp_loc, 0, strpos($temp_loc, $file_name)), '/');
+
 						if (strlen($upload_dir) > 0)
 						{
 							debug('Creating temp dir: ' . $upload_dir);

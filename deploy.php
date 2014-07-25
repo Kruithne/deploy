@@ -422,7 +422,9 @@
 						if (array_key_exists('new_extension', $module))
 							$upload_file_name = implode('.', $file_name_parts) . '.' . $module['new_extension'];
 
-						$cmd = sprintf($module['compile'], $file, $temp_dir . $upload_file_name);
+						$upload_file = $temp_dir . $upload_file_name;
+
+						$cmd = sprintf($module['compile'], $file, $upload_file);
 						debug('Module compile command: ' . $cmd);
 						exec($cmd);
 					}
